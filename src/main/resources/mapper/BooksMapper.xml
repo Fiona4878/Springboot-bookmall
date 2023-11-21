@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.bookmall.mapper.BooksMapper">
+  <resultMap id="BaseResultMap" type="com.example.bookmall.entity.Books">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <id column="Title" jdbcType="VARCHAR" property="title" />
+    <result column="Type" jdbcType="VARCHAR" property="type" />
+    <result column="Pages" jdbcType="INTEGER" property="pages" />
+    <result column="Price" jdbcType="DOUBLE" property="price" />
+    <result column="authorid" jdbcType="INTEGER" property="authorid" />
+    <result column="pressid" jdbcType="INTEGER" property="pressid" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.example.bookmall.entity.Books">
+    <result column="Brief" jdbcType="LONGVARCHAR" property="brief" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    ID, Title, Type, Pages, Price, authorid, pressid
+  </sql>
+  <sql id="Blob_Column_List">
+    Brief
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.example.bookmall.entity.BooksExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from books
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.example.bookmall.entity.BooksExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from books
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from books
+    where ID = #{id,jdbcType=INTEGER}
+      and Title = #{title,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from books
+    where ID = #{id,jdbcType=INTEGER}
+      and Title = #{title,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.example.bookmall.entity.BooksExample">
+    delete from books
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.example.bookmall.entity.Books">
+    insert into books (ID, Title, Type, 
+      Pages, Price, authorid, 
+      pressid, Brief)
+    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
+      #{pages,jdbcType=INTEGER}, #{price,jdbcType=DOUBLE}, #{authorid,jdbcType=INTEGER}, 
+      #{pressid,jdbcType=INTEGER}, #{brief,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.bookmall.entity.Books">
+    insert into books
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="title != null">
+        Title,
+      </if>
+      <if test="type != null">
+        Type,
+      </if>
+      <if test="pages != null">
+        Pages,
+      </if>
+      <if test="price != null">
+        Price,
+      </if>
+      <if test="authorid != null">
+        authorid,
+      </if>
+      <if test="pressid != null">
+        pressid,
+      </if>
+      <if test="brief != null">
+        Brief,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="pages != null">
+        #{pages,jdbcType=INTEGER},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="authorid != null">
+        #{authorid,jdbcType=INTEGER},
+      </if>
+      <if test="pressid != null">
+        #{pressid,jdbcType=INTEGER},
+      </if>
+      <if test="brief != null">
+        #{brief,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.example.bookmall.entity.BooksExample" resultType="java.lang.Long">
+    select count(*) from books
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update books
+    <set>
+      <if test="record.id != null">
+        ID = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.title != null">
+        Title = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.type != null">
+        Type = #{record.type,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pages != null">
+        Pages = #{record.pages,jdbcType=INTEGER},
+      </if>
+      <if test="record.price != null">
+        Price = #{record.price,jdbcType=DOUBLE},
+      </if>
+      <if test="record.authorid != null">
+        authorid = #{record.authorid,jdbcType=INTEGER},
+      </if>
+      <if test="record.pressid != null">
+        pressid = #{record.pressid,jdbcType=INTEGER},
+      </if>
+      <if test="record.brief != null">
+        Brief = #{record.brief,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update books
+    set ID = #{record.id,jdbcType=INTEGER},
+      Title = #{record.title,jdbcType=VARCHAR},
+      Type = #{record.type,jdbcType=VARCHAR},
+      Pages = #{record.pages,jdbcType=INTEGER},
+      Price = #{record.price,jdbcType=DOUBLE},
+      authorid = #{record.authorid,jdbcType=INTEGER},
+      pressid = #{record.pressid,jdbcType=INTEGER},
+      Brief = #{record.brief,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update books
+    set ID = #{record.id,jdbcType=INTEGER},
+      Title = #{record.title,jdbcType=VARCHAR},
+      Type = #{record.type,jdbcType=VARCHAR},
+      Pages = #{record.pages,jdbcType=INTEGER},
+      Price = #{record.price,jdbcType=DOUBLE},
+      authorid = #{record.authorid,jdbcType=INTEGER},
+      pressid = #{record.pressid,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.bookmall.entity.Books">
+    update books
+    <set>
+      <if test="type != null">
+        Type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="pages != null">
+        Pages = #{pages,jdbcType=INTEGER},
+      </if>
+      <if test="price != null">
+        Price = #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="authorid != null">
+        authorid = #{authorid,jdbcType=INTEGER},
+      </if>
+      <if test="pressid != null">
+        pressid = #{pressid,jdbcType=INTEGER},
+      </if>
+      <if test="brief != null">
+        Brief = #{brief,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+      and Title = #{title,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.example.bookmall.entity.Books">
+    update books
+    set Type = #{type,jdbcType=VARCHAR},
+      Pages = #{pages,jdbcType=INTEGER},
+      Price = #{price,jdbcType=DOUBLE},
+      authorid = #{authorid,jdbcType=INTEGER},
+      pressid = #{pressid,jdbcType=INTEGER},
+      Brief = #{brief,jdbcType=LONGVARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+      and Title = #{title,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.bookmall.entity.Books">
+    update books
+    set Type = #{type,jdbcType=VARCHAR},
+      Pages = #{pages,jdbcType=INTEGER},
+      Price = #{price,jdbcType=DOUBLE},
+      authorid = #{authorid,jdbcType=INTEGER},
+      pressid = #{pressid,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=INTEGER}
+      and Title = #{title,jdbcType=VARCHAR}
+  </update>
+</mapper>
